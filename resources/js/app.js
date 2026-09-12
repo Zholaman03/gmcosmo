@@ -159,16 +159,16 @@ function addToCart(product) {
 
 function removeFromCart(productId) {
     const oneCart = cart.find(item => item.id == productId);
-    
+
     cart = cart.filter(
         item => item.id != productId
     );
-    
-  
+
+
     showNotification(`${oneCart.name} удален из корзины`);
     saveCart();
     renderCart();
-    
+
 }
 
 
@@ -558,6 +558,8 @@ if (elements.purchaseForm) {
             const phone =
                 elements.userPhone.value.trim();
 
+        
+
 
             if (elements.nameError) {
                 elements.nameError.textContent = '';
@@ -582,15 +584,17 @@ if (elements.purchaseForm) {
             }
 
 
-            if (!phone) {
+            if (!phone || !/^\d{11}$/.test(phone)) {
 
                 if (elements.phoneError) {
                     elements.phoneError.textContent =
-                        'Введите телефон';
+                        'Введите телефон в формате 8XXXXXXXXXX';
                 }
 
                 hasError = true;
             }
+
+        
 
 
             if (cart.length === 0) {

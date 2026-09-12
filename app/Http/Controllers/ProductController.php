@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function index(){
 
-        $products = \App\Models\Product::with('category')->get();
+        $products = \App\Models\Product::with('category')->latest()->paginate(50);
 
         $categories = \App\Models\Category::all();
 
