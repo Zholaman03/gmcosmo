@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
     //
-    public function index(Order $order)
+    public function index()
     {
 
         return view('admin.dashboard');
@@ -28,14 +26,19 @@ class AdminController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
+            'barcode' => 'required|string|max:255',
+            'stock' => 'required|integer|min:0',
+            
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $product = new \App\Models\Product();
         $product->category_id = $request->input('category_id');
         $product->name = $request->input('name');
+        $product->barcode = $request->input('barcode');
+        $product->stock = $request->input('stock');
         $product->price = $request->input('price');
         $product->description = $request->input('description');
 
@@ -63,14 +66,18 @@ class AdminController extends Controller
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
+            'barcode' => 'required|string|max:255',
+            'stock' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $product = \App\Models\Product::findOrFail($id);
         $product->category_id = $request->input('category_id');
         $product->name = $request->input('name');
+        $product->barcode = $request->input('barcode');
+        $product->stock = $request->input('stock');
         $product->price = $request->input('price');
         $product->description = $request->input('description');
 
@@ -107,6 +114,7 @@ class AdminController extends Controller
     public function showProducts()
     {
         $products = \App\Models\Product::latest()->paginate(30);
+        // Get the total count of products
         return view('admin.products', compact('products'));
     }
 

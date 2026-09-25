@@ -16,12 +16,13 @@ return new class extends Migration
             $table->foreignId('category_id')
                 ->constrained('categories')
                 ->cascadeOnDelete();
-
+            $table->string('barcode')->unique();
             $table->string('name');
+            $table->unsignedBigInteger('stock')->default(0);
             $table->decimal('price', 12, 2);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

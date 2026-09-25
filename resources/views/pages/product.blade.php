@@ -15,26 +15,33 @@
         </div>
     </div>
 
-    <nav class="categories" id="categories" aria-label="Категории товаров">
+    <nav class="w-full my-4" id="categories" aria-label="Категории товаров">
+        <!-- Көлденең скролл бар контейнер (no-scrollbar арқылы скроллбар жасырылады) -->
+        <div class="flex items-center gap-2 overflow-x-auto py-2 px-1 scrollbar-none [ms-overflow-style:none] [scrollbar-width:none]" id="categoriesList">
 
-        <div class="categories__scroll" id="categoriesList">
-            <a href="{{ route('product') }}" class="category-btn categories__item" data-category-id="all" aria-label="Показать все товары">
+            <!-- "Все" категориясы -->
+            <a href="{{ route('product') }}"
+                class="category-btn shrink-0 px-5 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-900 hover:text-white hover:border-gray-900 active:scale-95 transition-all duration-200 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-1"
+                data-category-id="all"
+                aria-label="Показать все товары">
                 Все
             </a>
+
+            <!-- Категориялар циклы -->
             @foreach($categories as $category)
-            <a href="{{route('category.filter', ['category' => $category->id])}}" class="category-btn categories__item" data-category-id="{{ $category->id }}" aria-label="Фильтр по категории {{ $category->name }}">
+            <a href="{{ route('category.filter', ['category' => $category->id]) }}"
+                class="category-btn shrink-0 px-5 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-900 hover:text-white hover:border-gray-900 active:scale-95 transition-all duration-200 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-1"
+                data-category-id="{{ $category->id }}"
+                aria-label="Фильтр по категории {{ $category->name }}">
                 {{ $category->name }}
             </a>
-
             @endforeach
-        </div>
 
-        <!-- <div class="categories__scroll" id="categoriesList">
-        </div> -->
+        </div>
     </nav>
 
     <div class="catalog__meta">
-        <span id="productCount" class="catalog__count">Найдено товаров: {{ $products->count() }}</span>
+        <span id="productCount" class="catalog__count">Найдено товаров: {{ $products->total() }}</span>
     </div>
     @if($products->isEmpty())
     <div class="empty-state" id="emptyState">
@@ -57,7 +64,7 @@
             <div class="product-card__content">
                 <span class="product-card__brand">{{ $product->category->name }}</span>
                 <h3 class="product-card__name">{{ $product->name }}</h3>
-                <p class="product-card__description">{{ $product->description }}</p>
+                <p class="product-card__description ">{{ $product->description }}</p>
                 <div class="product-card__footer">
                     <span class="product-card__price">{{ number_format($product->price, 2) }} KZT</span>
 

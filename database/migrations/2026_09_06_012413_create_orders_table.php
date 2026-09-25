@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone');
+            
             $table->decimal('total_price', 10, 2);
             $table->string('status')->default('pending');
             $table->integer('total_quantity');

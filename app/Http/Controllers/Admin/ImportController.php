@@ -6,28 +6,28 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Imports\ProductsImport;
 use App\Models\Product;
-use App\Models\Category;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 
 class ImportController extends Controller
 {
-    //
     public function import(Request $request)
     {
+        $request->validate([
+            'file' => 'required|file|extensions:xlsx,xls,csv|max:10240',
+        ]);
+
         try {
             DB::transaction(function () use ($request) {
 
-
-                $request->validate([
-                    'file' => 'required|file|extensions:xlsx,xls,csv|max:10240',
-                ]);
-
                 $file = $request->file('file');
 
-                Product::query()->delete(); // Барлық бұрынғы өнімдерді жою
-                Category::query()->delete(); // Барлық бұрынғы категорияларды жою
-                // Excel файлын импорттау
+                // 1. Барлық қазіргі өнімдерді inactive қыламыз
+                Product::query()->update([
+                    'status' => 'inactive'
+                ]);
+
+                // 2. Excel импорттаймыз
                 Excel::import(
                     new ProductsImport,
                     $file
@@ -39,7 +39,7 @@ class ImportController extends Controller
                 'Товарлар сәтті импортталды!'
             );
         } catch (\Throwable $e) {
-
+            report($e);
             return back()->with(
                 'error',
                 'Excel файлын импорттау кезінде қате пайда болды.'

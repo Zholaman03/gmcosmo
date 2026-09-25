@@ -45,6 +45,16 @@
                 </div>
 
                 <div>
+                    <label for="barcode" class="mb-2 block text-sm font-medium text-gray-700">Штрихкод</label>
+                    <input type="text" name="barcode" id="barcode" value="{{ old('barcode') }}" placeholder="Введите штрихкод" class="block w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+                </div>
+
+                <div>
+                    <label for="quantity" class="mb-2 block text-sm font-medium text-gray-700">Количество товара <span class="text-red-500">*</span></label>
+                    <input type="number" name="stock" id="quantity" value="{{ old('quantity', 0) }}" min="0" step="1" required placeholder="0" class="block w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+                </div>
+                
+                <div>
                     <label for="description" class="mb-2 block text-sm font-medium text-gray-700">Описание</label>
                     <textarea name="description" id="description" rows="6" placeholder="Расскажите о свойствах и преимуществах товара" class="block w-full resize-y rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">{{ old('description') }}</textarea>
                 </div>

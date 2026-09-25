@@ -35,8 +35,10 @@
             <nav class="p-4 space-y-2 flex-1">
                 <a href="{{ route('admin.dashboard') }}" class="block rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20">Главная</a>
                 <a href="{{ route('admin.orders') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">Заказы</a>
+                <a href="{{ route('admin.orders.history') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">История заказов</a>
                 <a href="{{ route('admin.products') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">Товары</a>
                 <a href="{{ route('admin.import') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">Импорт товаров</a>
+                <a href="{{ route('admin.delivery_methods') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">Способы доставки</a>
             </nav>
 
             <div class="p-4 border-t border-slate-800/80">

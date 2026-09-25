@@ -2,7 +2,7 @@
 
 @section('content')
 @php
-    $totalProducts = $products->count();
+    $totalProducts = $products->total();
     $activeProducts = $products->filter(fn($product) => ($product->is_active ?? false) || ($product->status ?? '') === 'active')->count();
     $inactiveProducts = $totalProducts - $activeProducts;
     $categoryCount = $products->pluck('category_id')->filter()->unique()->count();
@@ -69,6 +69,8 @@
                         <tr>
                             <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">#</th>
                             <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Название</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Штрихкод</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Количество товара</th>
                             <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Цена</th>
                             <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Категория</th>
                             <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Статус</th>
@@ -84,6 +86,8 @@
                                         <div class="mt-1 text-xs text-slate-500">{{ $product->slug }}</div>
                                     @endif
                                 </td>
+                                <td class="px-5 py-4 ">{{ $product->barcode}}</td>
+                                 <td class="px-5 py-4 ">{{ $product->stock}}</td>
                                 <td class="px-5 py-4 font-semibold text-slate-900">{{ number_format($product->price ?? 0, 2, ',', ' ') }} ₽</td>
                                 <td class="px-5 py-4">
                                     <span class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">

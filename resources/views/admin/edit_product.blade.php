@@ -42,9 +42,19 @@
                                 <input id="name" name="name" type="text" required value="{{ old('name', $product->name ?? '') }}" placeholder="e.g. Premium skincare set" class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
                             <div>
+                                <label for="barcode" class="mb-2 block text-sm font-medium text-slate-700">Штрихкод</label>
+                                <input id="barcode" name="barcode" type="text" value="{{ old('barcode', $product->barcode ?? '') }}" placeholder="Введите штрихкод" class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label for="stock" class="mb-2 block text-sm font-medium text-slate-700">Количество</label>
+                                <input id="stock" name="stock" type="number" min="0" value="{{ old('stock', $product->stock ?? '') }}" placeholder="Введите количество" class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                            
+                            <div>
                                 <label for="description" class="mb-2 block text-sm font-medium text-slate-700">Описание</label>
                                 <textarea id="description" name="description" rows="6" placeholder="Tell customers about this product..." class="w-full rounded-xl border-slate-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-indigo-500 focus:ring-indigo-500">{{ old('description', $product->description ?? '') }}</textarea>
                             </div>
+                           
                             <div class="grid gap-5 sm:grid-cols-2">
                                 <div>
                                     <label for="category" class="mb-2 block text-sm font-medium text-slate-700">Категория</label>
@@ -55,6 +65,11 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div>
+                                    <p>
+                                        Штрихкод: {{old('barcode', $product->barcode ?? '')}}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -64,7 +79,10 @@
                         <p class="mb-6 mt-1 text-sm text-slate-500">Дайте вашему продукту правильную цену</p>
                         <div class="grid gap-5 sm:grid-cols-2">
                             <div><label for="price" class="mb-2 block text-sm font-medium text-slate-700">Цена<span class="text-red-500">*</span></label>
-                                <div class="flex overflow-hidden rounded-xl border border-slate-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500"><span class="bg-slate-50 px-4 py-3 text-sm text-slate-500">$</span><input id="price" name="price" type="number" step="0.01" min="0" required value="{{ old('price', $product->price ?? '') }}" class="w-full border-0 px-3 py-3 text-sm outline-none focus:ring-0"></div>
+                                <div class="flex overflow-hidden rounded-xl border border-slate-300 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
+                                    <span class="bg-slate-50 px-4 py-3 text-sm text-slate-500">$</span>
+                                    <input id="price" name="price" type="number" step="0.01" min="0" required value="{{ old('price', $product->price ?? '') }}" class="w-full border-0 px-3 py-3 text-sm outline-none focus:ring-0">
+                                </div>
                             </div>
                         </div>
                     </section>

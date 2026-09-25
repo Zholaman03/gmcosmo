@@ -11,7 +11,7 @@ Route::get('/', [ProductController::class, 'index'])->name('product');
 //category filter route
 Route::get('/category/{category}', [ProductController::class, 'filterByCategory'])->name('category.filter');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     // Admin routes
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
@@ -21,16 +21,23 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/products/create', [AdminController::class, 'storeProduct'])->name('admin.products.store');
     Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct'])->name('admin.products.destroy');
     
+    // DeliveryController routes
+    Route::get('/admin/delivery-methods', [\App\Http\Controllers\Admin\DeliveryController::class, 'index'])->name('admin.delivery_methods');
+    Route::post('/admin/delivery-methods', [\App\Http\Controllers\Admin\DeliveryController::class, 'store'])->name('admin.delivery_methods.store');
+    Route::patch('/admin/delivery-methods/{id}', [\App\Http\Controllers\Admin\DeliveryController::class, 'toogle'])->name('admin.delivery_methods.update');
     // ImportController routes
     Route::get('/admin/import', [ImportController::class, 'showImportForm'])->name('admin.import');
     Route::post('/import-products', [ImportController::class, 'import']);
     // OrderController routes
     Route::get('/admin/orders', [OrderController::class, 'showOrders'])->name('admin.orders');
-    Route::delete('/admin/orders/{item}', [OrderController::class, 'deleteOrderItem'])->name('admin.orders.delete');
+    Route::get('/admin/orders/history', [OrderController::class, 'history'])->name('admin.orders.history');
+    Route::patch('/admin/orders/{order}/complete', [OrderController::class, 'completeOrder'])->name('admin.orders.complete');
+    Route::patch('/admin/orders/{order}/cancel', [OrderController::class, 'cancelOrder'])->name('admin.orders.cancel');
+    Route::delete('/admin/orders/{order}', [OrderController::class, 'deleteOrder'])->name('admin.orders.delete');
 });
 
 
-Route::post('/order', [ProductController::class, 'order'])->name('order');
+
 
 //auth routes
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
