@@ -38,6 +38,7 @@ class ApiOrderController extends Controller
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'delivery_method_id' => $deliveryMethod->id,
+                'comment'=>$request->comment,
                 'total_price' => 0,
                 'total_quantity' => 0,
                 'paid_at' => null,
@@ -66,7 +67,7 @@ class ApiOrderController extends Controller
                     'price' => $price,
                 ]);
 
-                $product->decrement('stock', $quantity);
+             
             }
 
             $order->update([

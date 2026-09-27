@@ -36,7 +36,7 @@
     </nav>
 
     @forelse($orders as $order)
-        @include('admin.partials.order-card', ['order' => $order])
+        @include('admin.partials.card', ['order' => $order])
     @empty
         <div class="rounded-[28px] border border-dashed border-slate-300 bg-slate-50 p-10 text-center shadow-sm">
             <div class="text-lg font-semibold text-slate-700">В этом разделе пока нет заказов</div>

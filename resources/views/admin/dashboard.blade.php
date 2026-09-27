@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/js/uploadImg.js'])
 </head>
+
 <body class="bg-slate-100 font-sans text-slate-900" x-data="{ open: false }">
 
     <header class="bg-slate-950 text-white md:hidden flex items-center justify-between p-4 sticky top-0 z-50 shadow-lg shadow-slate-900/20">
@@ -33,12 +35,61 @@
             </div>
 
             <nav class="p-4 space-y-2 flex-1">
-                <a href="{{ route('admin.dashboard') }}" class="block rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20">Главная</a>
-                <a href="{{ route('admin.orders') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">Заказы</a>
-                <a href="{{ route('admin.orders.history') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">История заказов</a>
-                <a href="{{ route('admin.products') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">Товары</a>
-                <a href="{{ route('admin.import') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">Импорт товаров</a>
-                <a href="{{ route('admin.delivery_methods') }}" class="block rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-slate-800 hover:text-white">Способы доставки</a>
+
+                <a
+                    href="{{ route('admin.dashboard') }}"
+                    class="block rounded-xl px-4 py-3 text-sm font-medium transition
+        {{ request()->routeIs('admin.dashboard')
+            ? 'bg-gradient-to-r from-indigo-600 to-violet-600 font-semibold text-white shadow-lg shadow-indigo-500/20'
+            : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    Главная
+                </a>
+
+                <a
+                    href="{{ route('admin.orders') }}"
+                    class="block rounded-xl px-4 py-3 text-sm font-medium transition
+        {{ request()->routeIs('admin.orders')
+            ? 'bg-gradient-to-r from-indigo-600 to-violet-600 font-semibold text-white shadow-lg shadow-indigo-500/20'
+            : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    Заказы
+                </a>
+
+                <a
+                    href="{{ route('admin.orders.history') }}"
+                    class="block rounded-xl px-4 py-3 text-sm font-medium transition
+        {{ request()->routeIs('admin.orders.history')
+            ? 'bg-gradient-to-r from-indigo-600 to-violet-600 font-semibold text-white shadow-lg shadow-indigo-500/20'
+            : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    История заказов
+                </a>
+
+                <a
+                    href="{{ route('admin.products') }}"
+                    class="block rounded-xl px-4 py-3 text-sm font-medium transition
+        {{ request()->routeIs('admin.products')
+            ? 'bg-gradient-to-r from-indigo-600 to-violet-600 font-semibold text-white shadow-lg shadow-indigo-500/20'
+            : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    Товары
+                </a>
+
+                <a
+                    href="{{ route('admin.import') }}"
+                    class="block rounded-xl px-4 py-3 text-sm font-medium transition
+        {{ request()->routeIs('admin.import')
+            ? 'bg-gradient-to-r from-indigo-600 to-violet-600 font-semibold text-white shadow-lg shadow-indigo-500/20'
+            : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    Импорт товаров
+                </a>
+
+                <a
+                    href="{{ route('admin.delivery_methods') }}"
+                    class="block rounded-xl px-4 py-3 text-sm font-medium transition
+        {{ request()->routeIs('admin.delivery_methods')
+            ? 'bg-gradient-to-r from-indigo-600 to-violet-600 font-semibold text-white shadow-lg shadow-indigo-500/20'
+            : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    Способы доставки
+                </a>
+
             </nav>
 
             <div class="p-4 border-t border-slate-800/80">
@@ -55,4 +106,5 @@
     </div>
 
 </body>
+
 </html>

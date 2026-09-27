@@ -32,7 +32,7 @@ class OrderController extends Controller
 
     public function history()
     {
-        $orders = $this->ordersQuery()->where('status', 'completed')->latest()->get();
+        $orders = $this->ordersQuery()->where('status', 'completed')->latest()->paginate(20);
 
         return view('admin.order-history', compact('orders'));
     }

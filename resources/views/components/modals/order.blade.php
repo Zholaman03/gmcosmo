@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="order-form__field" id="fieldPhone">
-                    <label for="orderPhone">Телефон *</label>
+                    <label for="orderPhone">Телефон * (Укажите корректный номер WhatsApp для получения чек-информации.)</label>
                     <input type="tel" id="orderPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
                     <span class="order-form__error">Проверьте номер телефона</span>
                 </div>

@@ -472,7 +472,7 @@ document
 
             const product =
                 getProductFromButton(button);
-
+        
             const existingProduct =
                 findCartItem(product.id);
 

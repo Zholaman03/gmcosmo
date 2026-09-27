@@ -103,9 +103,13 @@ import { cart, saveCart, closeCartModal, renderCart } from "./app";
             const phone = document.getElementById('orderPhone');
             const address = document.getElementById('orderAddress');
             const deliveryValue = form.querySelector('input[name="delivery"]:checked').value;
-
+            const comment = document.getElementById('orderComment');
             const nameValid = validateField(name, 'fieldName', v => v.length >= 2);
-            const phoneValid = validateField(phone, 'fieldPhone', v => /^[+]?[\d\s().-]{7,20}$/.test(v));
+            const phoneValid = validateField(
+                phone,
+                'fieldPhone',
+                v => /^(?:8\d{10}|7\d{10})$/.test(v)
+            );
             const addressValid = deliveryValue === 'pickup_delivery'
                 ? true
                 : validateField(address, 'fieldAddress', v => v.length >= 5);
@@ -127,7 +131,8 @@ import { cart, saveCart, closeCartModal, renderCart } from "./app";
                         phone: phone.value,
                         status: 'paid',
                         address: address.value,
-                        products: cart
+                        products: cart,
+                        comment: comment.value.trim()
                     }
 
 
@@ -146,7 +151,7 @@ import { cart, saveCart, closeCartModal, renderCart } from "./app";
                             };
                         })
                     }));
-                    cart.length = 0;
+
                     // saveCart();
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Подтвердить заказ';

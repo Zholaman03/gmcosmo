@@ -11,6 +11,8 @@ Route::get('/', [ProductController::class, 'index'])->name('product');
 //category filter route
 Route::get('/category/{category}', [ProductController::class, 'filterByCategory'])->name('category.filter');
 
+
+
 Route::middleware(['auth', 'admin'])->group(function () {
     // Admin routes
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');

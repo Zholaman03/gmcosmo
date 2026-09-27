@@ -1,144 +1,265 @@
+
+import api from './api';
+import { cart, renderCart } from './app';
+
 document.addEventListener('DOMContentLoaded', function () {
-    const checkPaymentModal = document.getElementById('checkPaymentModal');
-    if (!checkPaymentModal) {
+    const modal = document.getElementById('checkPaymentModal');
+
+    if (!modal) {
         return;
     }
 
-    const paymentOrderMeta = document.getElementById('paymentOrderMeta');
-    const paymentItemsList = document.getElementById('paymentItemsList');
-    const paymentCheckResult = document.getElementById('paymentCheckResult');
-    const checkPaymentButton = document.getElementById('checkPaymentButton');
-    const paymentCloseEls = checkPaymentModal.querySelectorAll('[data-close-payment-modal]');
+    const orderNumber = document.getElementById('paymentOrderNumber');
+    const result = document.getElementById('paymentCheckResult');
 
-    function renderOrderSummary() {
-        if (!paymentOrderMeta || !paymentItemsList) {
+    const closeEls = modal.querySelectorAll(
+        '[data-close-payment-modal]'
+    );
+
+    // ========================================
+    // PAYMENT POLLING
+    // ========================================
+
+    let paymentPolling = null;
+
+    const POLLING_INTERVAL = 3000; // 3 секунды
+    const MAX_ATTEMPTS = 100;      // 5 минут
+
+    let pollingAttempts = 0;
+
+
+    // ========================================
+    // GET LAST ORDER
+    // ========================================
+
+    function getOrder() {
+        try {
+            return JSON.parse(
+                localStorage.getItem('lastOrder') || 'null'
+            );
+        } catch (e) {
+            console.error('Failed to parse lastOrder:', e);
+
+            return null;
+        }
+    }
+
+
+    // ========================================
+    // STOP POLLING
+    // ========================================
+
+    function stopPaymentPolling() {
+        if (paymentPolling !== null) {
+            clearInterval(paymentPolling);
+            paymentPolling = null;
+        }
+
+        pollingAttempts = 0;
+    }
+
+
+    // ========================================
+    // CHECK PAYMENT STATUS
+    // ========================================
+
+    async function checkPaymentStatus(orderId) {
+        try {
+            const response = await api.get(
+                `/api/payment/status/${orderId}`
+            );
+
+            /*
+             * Если api.js использует Axios,
+             * Laravel JSON находится в response.data
+             */
+            const data = response;
+
+           
+
+            if (data.status === 'paid') {
+                stopPaymentPolling();
+
+                result.innerHTML = `
+                    <span class="font-medium text-green-600">
+                        Оплата подтверждена ✓
+                    </span>
+                `;
+
+                // Корзину можно очистить
+                cart.length = 0;
+                localStorage.removeItem('lastOrder');
+                renderCart();
+
+                return true;
+            }
+
+            if (data.status === 'failed') {
+                stopPaymentPolling();
+
+                result.innerHTML = `
+                    <span class="font-medium text-red-600">
+                        Оплата не прошла.
+                    </span>
+                `;
+
+                return true;
+            }
+
+            // pending / waiting / другое состояние
+            result.innerHTML = `
+                <span class="text-gray-500 dark:text-gray-400">
+                    Ожидаем подтверждение оплаты...
+                </span>
+            `;
+
+            return false;
+
+        } catch (error) {
+            console.error('Payment status error:', error);
+
+            /*
+             * Ошибка одного запроса не останавливает polling.
+             * Следующий запрос попробует снова.
+             */
+            result.innerHTML = `
+                <span class="text-yellow-600">
+                    Проверяем оплату...
+                </span>
+            `;
+
+            return false;
+        }
+    }
+
+
+    // ========================================
+    // START POLLING
+    // ========================================
+
+    function startPaymentPolling(orderId) {
+        // На всякий случай останавливаем старый polling
+        stopPaymentPolling();
+
+        pollingAttempts = 0;
+
+        /*
+         * Сначала проверяем сразу,
+         * чтобы не ждать первые 3 секунды.
+         */
+        checkPaymentStatus(orderId);
+
+        paymentPolling = setInterval(async function () {
+            pollingAttempts++;
+
+            const paid = await checkPaymentStatus(orderId);
+
+            if (paid) {
+                return;
+            }
+
+            /*
+             * Максимум 100 проверок.
+             *
+             * 100 × 3 секунды ≈ 5 минут
+             */
+            if (pollingAttempts >= MAX_ATTEMPTS) {
+                stopPaymentPolling();
+
+                result.innerHTML = `
+                    <div class="space-y-2">
+                        <p class="text-yellow-600">
+                            Не удалось автоматически подтвердить оплату.
+                        </p>
+
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Если вы уже оплатили заказ, статус может обновиться немного позже.
+                        </p>
+                    </div>
+                `;
+            }
+
+        }, POLLING_INTERVAL);
+    }
+
+
+    // ========================================
+    // OPEN MODAL
+    // ========================================
+
+    function openPaymentModal() {
+        const order = getOrder();
+
+        if (!order?.orderId) {
+            console.error('Order not found');
+
             return;
         }
 
-        let order = null;
-        try {
-            order = JSON.parse(localStorage.getItem('lastOrder') || 'null');
-        } catch (e) {
-            order = null;
-        }
+        orderNumber.textContent = order.orderId;
 
-        paymentOrderMeta.innerHTML = order
-            ? '<div><strong>Номер заказа:</strong> ' + (order.orderId ?? '—') + '</div>' +
-              '<div><strong>Способ доставки:</strong> ' + (order.deliveryLabel || '—') + '</div>' +
-              '<div><strong>Адресс:</strong> '+(order.address || '-') + '</div>'
-            : '<div>Данные о заказе не найдены.</div>';
+        result.innerHTML = `
+            <span class="text-gray-500 dark:text-gray-400">
+                Проверяем статус оплаты...
+            </span>
+        `;
 
-        const items = Array.isArray(order?.items) ? order.items : [];
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
 
-        if (items.length === 0) {
-            paymentItemsList.innerHTML =
-                '<div class="px-3 py-3 text-sm text-gray-500 dark:text-gray-400">Товары не найдены.</div>';
-        } else {
-            paymentItemsList.innerHTML = items.map(function (item) {
-                return (
-                    '<div class="flex items-center justify-between gap-3 px-3 py-3 text-sm">' +
-                        '<div class="min-w-0">' +
-                            '<div class="truncate font-medium text-gray-800 dark:text-gray-100">' + item.name + '</div>' +
-                            '<div class="text-xs text-gray-500 dark:text-gray-400">' + item.qty + ' шт. × ' + item.price + '</div>' +
-                        '</div>' +
-                        '<div class="shrink-0 font-medium text-gray-800 dark:text-gray-100">' + item.total + '</div>' +
-                    '</div>'
-                );
-            }).join('');
-        }
+        modal.setAttribute('aria-hidden', 'false');
 
-        const existingTotal = document.getElementById('paymentOrderTotal');
-        if (existingTotal) {
-            existingTotal.remove();
-        }
-
-        const grandTotal = items.reduce(function (sum, i) {
-            return sum + parseFloat(i.total);
-        }, 0);
-
-        paymentItemsList.insertAdjacentHTML(
-            'afterend',
-            '<div id="paymentOrderTotal" class="mt-3 flex justify-between border-t border-gray-100 pt-3 text-sm font-semibold text-gray-900 dark:border-gray-700 dark:text-white">' +
-                '<span>Итого:</span><span>' + grandTotal + ' ₸</span>' +
-            '</div>'
-        );
-    }
-
-    function openPaymentModal() {
-        renderOrderSummary();
-        if (paymentCheckResult) {
-            paymentCheckResult.innerHTML = '';
-        }
-        checkPaymentModal.classList.remove('hidden');
-        checkPaymentModal.classList.add('flex');
-        checkPaymentModal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+
+        // Запускаем polling
+        startPaymentPolling(order.orderId);
     }
+
+
+    // ========================================
+    // CLOSE MODAL
+    // ========================================
 
     function closePaymentModal() {
-        checkPaymentModal.classList.add('hidden');
-        checkPaymentModal.classList.remove('flex');
-        checkPaymentModal.setAttribute('aria-hidden', 'true');
+        // Останавливаем polling
+        stopPaymentPolling();
+
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+
+        modal.setAttribute('aria-hidden', 'true');
+
         document.body.style.overflow = '';
     }
 
-    paymentCloseEls.forEach(function (el) {
+
+    // ========================================
+    // CLOSE BUTTONS
+    // ========================================
+
+    closeEls.forEach(function (el) {
         el.addEventListener('click', closePaymentModal);
     });
 
+
+    // ========================================
+    // ESC
+    // ========================================
+
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && checkPaymentModal.getAttribute('aria-hidden') === 'false') {
+        if (
+            e.key === 'Escape' &&
+            modal.getAttribute('aria-hidden') === 'false'
+        ) {
             closePaymentModal();
         }
     });
 
-    if (checkPaymentButton) {
-        checkPaymentButton.addEventListener('click', function () {
-            let order = null;
-            try {
-                order = JSON.parse(localStorage.getItem('lastOrder') || 'null');
-            } catch (e) {
-                order = null;
-            }
 
-            if (!order || !order.orderId) {
-                paymentCheckResult.innerHTML = '<span class="text-red-600">Не удалось определить заказ для проверки.</span>';
-                return;
-            }
+    // ========================================
+    // GLOBAL FUNCTIONS
+    // ========================================
 
-            checkPaymentButton.disabled = true;
-            checkPaymentButton.textContent = 'Проверяем...';
-            paymentCheckResult.innerHTML = '<span class="text-gray-500">Проверка статуса оплаты...</span>';
-
-            // TODO: замените URL на реальный эндпоинт проверки оплаты
-            fetch('/api/orders/' + encodeURIComponent(order.orderId) + '/payment-status', {
-                headers: { 'Accept': 'application/json' }
-            })
-                .then(function (response) {
-                    if (!response.ok) {
-                        throw new Error('Request failed');
-                    }
-                    return response.json();
-                })
-                .then(function (data) {
-                    checkPaymentButton.disabled = false;
-                    checkPaymentButton.textContent = 'Проверить оплату';
-
-                    if (data && data.paid) {
-                        paymentCheckResult.innerHTML = '<span class="text-green-600 font-medium">Оплата подтверждена ✓</span>';
-                    } else {
-                        paymentCheckResult.innerHTML = '<span class="text-yellow-600">Оплата пока не найдена. Попробуйте позже.</span>';
-                    }
-                })
-                .catch(function () {
-                    checkPaymentButton.disabled = false;
-                    checkPaymentButton.textContent = 'Проверить оплату';
-                    paymentCheckResult.innerHTML = '<span class="text-red-600">Не удалось проверить оплату. Попробуйте ещё раз.</span>';
-                });
-        });
-    }
-
-    // Открыть модалку можно из любого места: window.openPaymentModal()
     window.openPaymentModal = openPaymentModal;
     window.closePaymentModal = closePaymentModal;
 });

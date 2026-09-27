@@ -8,10 +8,17 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
 
-        $products = \App\Models\Product::with('category')->latest()->paginate(50);
+        $products = Product::query()
+            ->when($request->search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(50)
+            ->withQueryString();
+
 
         $categories = \App\Models\Category::all();
 
@@ -32,6 +39,4 @@ class ProductController extends Controller
 
         return view('pages.product', compact('products', 'categories', 'DeliveryMethods'));
     }
-
- 
 }
