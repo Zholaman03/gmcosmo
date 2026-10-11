@@ -96,7 +96,7 @@
                 </div>
             </div>
         </section>
-        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Сообщение: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum perferendis tenetur hic cupiditate sapiente dolores ratione adipisci, deserunt suscipit dolorem quis ab temporibus maiores magnam aut. Id ad aliquam veritatis.</p>
+        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Сообщение: {{ $order->comment ?? 'Нет сообщения' }}</p>
         {{-- ТОВАРЫ: сворачиваются, если позиций много --}}
         <section>
             <details class="group" @if($itemsCount <= 3) open @endif>

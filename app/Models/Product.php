@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
+use App\Models\Sale;
+
 class Product extends Model
 {
     protected $fillable = [
@@ -17,7 +19,13 @@ class Product extends Model
         'status',
     ];
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
+    }
+
+    public function sales()
+    {
+        return $this->belongsToMany(Sale::class);
     }
 }

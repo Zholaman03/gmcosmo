@@ -69,7 +69,7 @@
             <div class="product-card__content">
                 <span class="product-card__brand">{{ $product->category->name }}</span>
                 <h3 class="product-card__name">{{ $product->name }}</h3>
-                <p class="product-card__description ">{{ $product->description }}</p>
+                <p class="product-card__description mb-4 text-gray-500 text-sm">{{ $product->description }}</p>
                 <div class="product-card__footer">
                     <span class="product-card__price">{{ number_format($product->price, 2) }} KZT</span>
 

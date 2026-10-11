@@ -67,6 +67,7 @@ import { cart, saveCart, closeCartModal, renderCart } from "./app";
     }
 
     function closeOrderModal() {
+        openBtn.focus();
         orderModal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
     }
@@ -169,10 +170,19 @@ import { cart, saveCart, closeCartModal, renderCart } from "./app";
 
                     form.reset();
                     applyDeliveryMode('pickup_delivery');
+                  
+                    if (result.payment_url) {
+                        sessionStorage.setItem('openCheckModal', 'true');
+                        openPaymentModal();
+                        window.location.href = result.payment_url;
+                        
 
-                    openPaymentModal();
+                    }
+                    
+
+                    
                     // renderCart();
-                    // window.location.href = result.qr_image_url;
+                    // window.location.href = result.qr_token_url;
                 }
             } catch (error) {
                 console.error('Order error:', error);
@@ -195,4 +205,7 @@ import { cart, saveCart, closeCartModal, renderCart } from "./app";
 
         });
     }
+
+    
 })();
+

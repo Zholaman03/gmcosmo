@@ -5,6 +5,8 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\SaleController;
+use Illuminate\Support\Facades\Http;
 
 Route::get('/', [ProductController::class, 'index'])->name('product');
 
@@ -22,6 +24,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/products/{id}', [AdminController::class, 'updateProduct'])->name('admin.products.update');
     Route::post('/admin/products/create', [AdminController::class, 'storeProduct'])->name('admin.products.store');
     Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct'])->name('admin.products.destroy');
+
+    // SaleController routes
+    Route::get('/admin/sales', [\App\Http\Controllers\Admin\SaleController::class, 'index'])->name('admin.sales');
+    Route::get('/admin/sales/create', [\App\Http\Controllers\Admin\SaleController::class, 'create'])->name('admin.sales.create');
+    Route::post('/admin/sales', [\App\Http\Controllers\Admin\SaleController::class, 'store'])->name('admin.sales.store');
+    Route::get('/admin/sales/{id}/edit', [\App\Http\Controllers\Admin\SaleController::class, 'edit'])->name('admin.sales.edit');
+    Route::put('/admin/sales/{id}', [\App\Http\Controllers\Admin\SaleController::class, 'update'])->name('admin.sales.update');
+    Route::delete('/admin/sales/{id}', [\App\Http\Controllers\Admin\SaleController::class, 'destroy'])->name('admin.sales.destroy');
     
     // DeliveryController routes
     Route::get('/admin/delivery-methods', [\App\Http\Controllers\Admin\DeliveryController::class, 'index'])->name('admin.delivery_methods');
@@ -45,3 +55,4 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+

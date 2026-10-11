@@ -12,11 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/css/payment-modal.css', 'resources/js/app.js', 'resources/js/showmodal.js', 'resources/js/check.js'])
 
-    <!--
-        Стили ниже относятся только к новому модальному окну оформления заказа
-        и к адаптивным правкам. Рекомендую со временем перенести их
-        в resources/css/payment-modal.css, чтобы не хранить стили в разметке.
-    -->
 </head>
 
 <body>

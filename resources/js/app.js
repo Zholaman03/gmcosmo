@@ -435,10 +435,11 @@ function renderCartItems() {
 // ========================================
 
 function renderCart() {
-
+    
     if (!elements.cartItemsList) {
         return;
     }
+    
 
     updateCartSummary();
     updateProductButtons();

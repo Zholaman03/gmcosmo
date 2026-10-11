@@ -88,7 +88,7 @@
                                 </td>
                                 <td class="px-5 py-4 ">{{ $product->barcode}}</td>
                                  <td class="px-5 py-4 ">{{ $product->stock}}</td>
-                                <td class="px-5 py-4 font-semibold text-slate-900">{{ number_format($product->price ?? 0, 2, ',', ' ') }} ₽</td>
+                                <td class="px-5 py-4 font-semibold text-slate-900">{{ number_format($product->price ?? 0, 2, ',', ' ') }} KZT</td>
                                 <td class="px-5 py-4">
                                     <span class="inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
                                         {{ $product->category->name ?? 'Без категории' }}

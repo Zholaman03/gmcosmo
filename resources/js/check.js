@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
              */
             const data = response;
 
-           
+
 
             if (data.status === 'paid') {
                 stopPaymentPolling();
@@ -188,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
 
     function openPaymentModal() {
+
         const order = getOrder();
 
         if (!order?.orderId) {
@@ -210,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.setAttribute('aria-hidden', 'false');
 
         document.body.style.overflow = 'hidden';
-
+    
         // Запускаем polling
         startPaymentPolling(order.orderId);
     }
@@ -221,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
 
     function closePaymentModal() {
+      
         // Останавливаем polling
         stopPaymentPolling();
 
@@ -230,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.setAttribute('aria-hidden', 'true');
 
         document.body.style.overflow = '';
+        
     }
 
 
@@ -262,4 +265,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.openPaymentModal = openPaymentModal;
     window.closePaymentModal = closePaymentModal;
+
+    if (
+        sessionStorage.getItem('openCheckModal')
+
+    ) {
+     
+        openPaymentModal();
+    }
 });

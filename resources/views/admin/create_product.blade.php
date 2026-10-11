@@ -53,7 +53,7 @@
                     <label for="quantity" class="mb-2 block text-sm font-medium text-gray-700">Количество товара <span class="text-red-500">*</span></label>
                     <input type="number" name="stock" id="quantity" value="{{ old('quantity', 0) }}" min="0" step="1" required placeholder="0" class="block w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
                 </div>
-                
+
                 <div>
                     <label for="description" class="mb-2 block text-sm font-medium text-gray-700">Описание</label>
                     <textarea name="description" id="description" rows="6" placeholder="Расскажите о свойствах и преимуществах товара" class="block w-full resize-y rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">{{ old('description') }}</textarea>
@@ -76,6 +76,24 @@
                             @endforeach
                         </select>
                     </div>
+                    <div>
+                        <label>Акции</label>
+
+                        @foreach ($sales as $sale)
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="sales[]"
+                                value="{{ $sale->id }}"
+                                @checked($product->sales->contains($sale->id))
+                            >
+
+                            {{ $sale->product_name }} — {{ $sale->discount_percent }}%
+                        </label>
+                            — {{ $sale->discount_percent }}%
+                        </label>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
@@ -85,7 +103,7 @@
                     <p class="mt-1 text-sm text-gray-500">Добавьте четкое изображение товара.</p>
                 </div>
                 <div class="relative w-full max-w-md">
-                    
+
                     <label for="image" id="upload-label" class="mt-6 flex min-h-56 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white px-5 text-center transition hover:border-indigo-400 hover:bg-indigo-50/40">
                         <span class="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
                             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">

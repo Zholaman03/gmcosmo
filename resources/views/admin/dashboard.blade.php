@@ -92,6 +92,17 @@
 
             </nav>
 
+            <nav class="p-4 space-y-2 border-t border-slate-800/80">
+                <a
+                    href="{{ route('admin.sales') }}"
+                    class="block rounded-xl px-4 py-3 text-sm font-medium transition
+        {{ request()->routeIs('admin.sales')
+            ? 'bg-gradient-to-r from-indigo-600 to-violet-600 font-semibold text-white shadow-lg shadow-indigo-500/20'
+            : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    Акции
+                </a>
+            </nav>
+
             <div class="p-4 border-t border-slate-800/80">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
